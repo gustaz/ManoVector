@@ -8,3 +8,7 @@ ManoVector.vcxproj.user
 ManoVector.vcxproj
 
 ManoVector.sln
+
+Debug/
+
+a.exe
