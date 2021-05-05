@@ -27,7 +27,7 @@ public:
     ManoVector(int size, int val);
     ManoVector(const std::initializer_list<valueType>& vec);
     ManoVector(const ManoVector<valueType>& vec);
-    
+    template<class InputIterator> ManoVector(InputIterator first, InputIterator last);
 // DESTRUCTOR --
     ~ManoVector() {
         delete[] _element;
@@ -161,6 +161,19 @@ ManoVector<valueType>::ManoVector(const std::initializer_list<valueType>& vect) 
 
     for (int i = 0; i < vect.size(); i++)
         _element[i] = *(vect.begin() + i);
+}
+
+template<class valueType>
+template<class InputIterator>
+ManoVector<valueType>::ManoVector(InputIterator first, InputIterator last)
+{
+    size_type count = 0;
+    for (InputIterator curr = first; curr != last; ++curr) ++count;
+    _size = count;
+    _capacity = count + count / 2 + 1;
+    _element = new valueType[_capacity];
+    for (size_type i = 0; i < count; i++)
+        _element[i] = *first++;
 }
 
 template <class valueType>
