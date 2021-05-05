@@ -2,7 +2,7 @@
 
 Ši klasė iš esmės yra STL bibliotekoje randamos vector bibliotekos re-implementacija. Perkurtos visos member ir non-member functions, išlaikytas duomenų dinamiškumas, pritaikymas C++11 standartui.
 
-##Ištestuoti metodai
+## Ištestuoti metodai
 
 Programoje testuojami penki metodai, pasirinkti pagal jų implementacijos sudėtingumą.
 
