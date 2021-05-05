@@ -52,9 +52,12 @@ public:
     // rbegin, rend --
     reverse_iterator rbegin();
     reverse_iterator rend();
-
     const_reverse_iterator rbegin() const;
     const_reverse_iterator rend() const;
+
+    // crbegin, crend --
+    const_reverse_iterator crbegin() const;
+    const_reverse_iterator crend() const;
 
 // CAPACITY --
 
@@ -103,9 +106,9 @@ public:
     void clear();
     //emplace_back --
     template <typename ... Args> valueType& emplace_back(Args&& ... args);
-    //emplace
+    //emplace --
     template <typename ... Args> iterator emplace(const_iterator pos, Args&& ... args);
-    void move_storage(valueType* dest, valueType* from, size_type n);
+    void move_elem(valueType* dest, valueType* from, size_type n);
 // Non-member function overloads
 
     // swap --
@@ -240,11 +243,23 @@ typename ManoVector<valueType>::reverse_iterator ManoVector<valueType>::rend()
 template<class valueType>
 typename ManoVector<valueType>::const_reverse_iterator ManoVector<valueType>::rbegin() const
 {
-    return rbegin();
+    return reverse_iterator(_element + _size);
 }
 
 template<class valueType>
 typename ManoVector<valueType>::const_reverse_iterator ManoVector<valueType>::rend() const
+{
+    return reverse_iterator(_element);
+}
+
+template<class valueType>
+typename ManoVector<valueType>::const_reverse_iterator ManoVector<valueType>::crbegin() const
+{
+    return rbegin();
+}
+
+template<class valueType>
+typename ManoVector<valueType>::const_reverse_iterator ManoVector<valueType>::crend() const
 {
     return rend();
 }
@@ -430,21 +445,21 @@ template<typename ...Args>
 typename ManoVector<valueType>::iterator ManoVector<valueType>::emplace(const_iterator iter, Args && ...args)
 {
     size_type pos = iter - _element;
-    iterator _iter = &storage[pos]; 
+    iterator _iter = &_element[pos]; 
 
     if (_size == _capacity)
     {
         reserve(_capacity + _capacity / 2 + 1);
     }
     _iter = &_element[pos];
-    mvm(_iter + 1, _iter, _size - (_iter - _element));
+    move_elem(_iter + 1, _iter, _size - (_iter - _element));
     ++_size;
     *_iter = std::move(valueType(std::forward<Args>(args) ...));
     return _iter;
 }
 
 template<typename valueType>
-void ManoVector<valueType>::move_storage(valueType* dest, valueType* from, size_type n)
+void ManoVector<valueType>::move_elem(valueType* dest, valueType* from, size_type n)
 {
     if (dest < from)
     {
@@ -461,7 +476,6 @@ void ManoVector<valueType>::move_storage(valueType* dest, valueType* from, size_
     else
         return;
 }
-
 
 template <class valueType>
 void ManoVector<valueType>::swap(valueType& x, valueType& y) 
